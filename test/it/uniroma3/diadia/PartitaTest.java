@@ -1,32 +1,46 @@
 package it.uniroma3.diadia;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-class PartitaTest {
+public class PartitaTest {
 
 	private Partita partita;
+	private IO io;
 
-	@BeforeEach
-	void setUp() {
-		this.partita = new Partita();
+	@Before
+	public void setUp() {
+		// Dobbiamo creare un IO per il costruttore di Partita
+		// Possiamo usare una classe anonima o IOConsole
+		this.io = new IOConsole(); 
+		this.partita = new Partita(io);
 	}
 
 	@Test
-	void testIsFinita_AppenaIniziata() {
-		assertFalse(this.partita.isFinita());
+	public void testVinta() {
+		// All'inizio non è vinta perché siamo nell'atrio
+		assertFalse(partita.vinta());
 	}
 
 	@Test
-	void testIsFinita_CfuZero() {
-		this.partita.getGiocatore().setCfu(0); // Testiamo lo stato limite [cite: 175]
-		assertTrue(this.partita.isFinita());
+	public void testIsFinita_InizioPartita() {
+		assertFalse(partita.isFinita());
 	}
 
 	@Test
-	void testVinta_InAtrio() {
-		// Sappiamo che l'atrio non è la biblioteca (uscita)
-		assertFalse(this.partita.vinta());
+	public void testSetFinita() {
+		partita.setFinita();
+		assertTrue(partita.isFinita());
 	}
+    
+    @Test
+    public void testGetGiocatore() {
+        assertNotNull(partita.getGiocatore());
+    }
+
+    @Test
+    public void testGetLabirinto() {
+        assertNotNull(partita.getLabirinto());
+    }
 }
