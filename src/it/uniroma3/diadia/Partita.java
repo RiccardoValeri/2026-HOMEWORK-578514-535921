@@ -1,71 +1,45 @@
 package it.uniroma3.diadia;
-import it.uniroma3.diadia.ambienti.Stanza;
-import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.giocatore.Giocatore;
+
 import it.uniroma3.diadia.ambienti.Labirinto;
-/**
- * Questa classe modella una partita del gioco
- *
- * @author  docente di POO
- * @see Stanza
- * @version base
- */
+import it.uniroma3.diadia.giocatore.Giocatore;
 
 public class Partita {
 
-	private boolean finita;
-	private Labirinto labirinto; 
+	private Labirinto labirinto;
 	private Giocatore giocatore;
-	private Stanza stanzaCorrente;
-	
-	public Partita(){
-		this.finita = false;
+	private boolean finita;
+	private IO io; // Aggiungi questo campo [cite: 37]
+
+	// Il costruttore ora deve accettare IO 
+	public Partita(IO io){
 		this.labirinto = new Labirinto();
 		this.giocatore = new Giocatore();
-		this.stanzaCorrente = this.labirinto.getStanzaIniziale();
+		this.finita = false;
+		this.io = io; 
+	}
+	
+	// Aggiungi questo metodo getter per i comandi
+	public IO getIo() {
+		return this.io;
 	}
 
 	public Labirinto getLabirinto() {
 		return labirinto;
 	}
-	
+
 	public Giocatore getGiocatore() {
 		return giocatore;
 	}
-  
-
-
-	public void setStanzaCorrente(Stanza stanzaCorrente) {
-		this.stanzaCorrente = stanzaCorrente;
-	}
-
-	public Stanza getStanzaCorrente() {
-		return this.stanzaCorrente;
-	}
 	
-	/**
-	 * Restituisce vero se e solo se la partita e' stata vinta
-	 * @return vero se partita vinta
-	 */
 	public boolean vinta() {
-		return this.stanzaCorrente.equals(this.labirinto.getStanzaFinale());
+		return this.labirinto.getStanzaCorrente() == this.labirinto.getStanzaVincente();
 	}
 
-	/**
-	 * Restituisce vero se e solo se la partita e' finita
-	 * @return vero se partita finita
-	 */
 	public boolean isFinita() {
-		return finita || vinta() || (this.giocatore.getCfu() == 0);
+		return finita || vinta() || (giocatore.getCfu() == 0);
 	}
 
-	/**
-	 * Imposta la partita come finita
-	 *
-	 */
 	public void setFinita() {
 		this.finita = true;
 	}
-
-	
 }

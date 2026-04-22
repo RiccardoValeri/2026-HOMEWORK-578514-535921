@@ -3,54 +3,56 @@ package it.uniroma3.diadia.ambienti;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Labirinto {
-	private Stanza stanzaIniziale;
-	private Stanza stanzaFinale;
-	
-	public Labirinto() {
-		creaLabirinto();
-	}
-	
-	private void creaLabirinto() {
-			/* crea gli attrezzi */
-	    	Attrezzo lanterna = new Attrezzo("lanterna",3);
-			Attrezzo osso = new Attrezzo("osso",1);
-	    	
-			/* crea stanze del labirinto */
-			Stanza atrio = new Stanza("Atrio");
-			Stanza aulaN11 = new Stanza("Aula N11");
-			Stanza aulaN10 = new Stanza("Aula N10");
-			Stanza laboratorio = new Stanza("Laboratorio Campus");
-			Stanza biblioteca = new Stanza("Biblioteca");
-			
-			/* collega le stanze */
-			atrio.impostaStanzaAdiacente("nord", biblioteca);
-			atrio.impostaStanzaAdiacente("est", aulaN11);
-			atrio.impostaStanzaAdiacente("sud", aulaN10);
-			atrio.impostaStanzaAdiacente("ovest", laboratorio);
-			aulaN11.impostaStanzaAdiacente("est", laboratorio);
-			aulaN11.impostaStanzaAdiacente("ovest", atrio);
-			aulaN10.impostaStanzaAdiacente("nord", atrio);
-			aulaN10.impostaStanzaAdiacente("est", aulaN11);
-			aulaN10.impostaStanzaAdiacente("ovest", laboratorio);
-			laboratorio.impostaStanzaAdiacente("est", atrio);
-			laboratorio.impostaStanzaAdiacente("ovest", aulaN11);
-			biblioteca.impostaStanzaAdiacente("sud", atrio);
+    private Stanza stanzaIniziale;
+    private Stanza stanzaFinale;
+    private Stanza stanzaCorrente;
 
-	        /* pone gli attrezzi nelle stanze */
-			aulaN10.addAttrezzo(lanterna);
-			atrio.addAttrezzo(osso);
+    public Labirinto() {
+        creaLabirinto();
+        this.stanzaCorrente = this.stanzaIniziale;
+    }
 
-			// il gioco comincia nell'atrio
-	        this.stanzaIniziale = atrio;  
-			this.stanzaFinale = biblioteca;
-	    
-	}
-	
-	public Stanza getStanzaIniziale() {
-		return stanzaIniziale;
-	}
-	
-	public Stanza getStanzaFinale() {
-		return stanzaFinale;
-	}
+    private void creaLabirinto() {
+        /* crea gli attrezzi */
+        Attrezzo lanterna = new Attrezzo("lanterna", 3);
+        Attrezzo osso = new Attrezzo("osso", 1);
+        Attrezzo chiave = new Attrezzo("chiave", 1);
+
+        /* 1. CREA LE STANZE (Sostituendo alcune con quelle speciali) */
+        Stanza atrio = new Stanza("Atrio");
+        StanzaMagica aulaN11 = new StanzaMagica("Aula N11"); // Stanza Magica
+        StanzaBuia aulaN10 = new StanzaBuia("Aula N10", "lanterna"); // Stanza Buia (serve lanterna)
+        StanzaBloccata laboratorio = new StanzaBloccata("Laboratorio Campus", "ovest", "chiave"); // Bloccata a ovest
+        Stanza biblioteca = new Stanza("Biblioteca");
+
+        /* 2. COLLEGA LE STANZE (Rimane uguale) */
+        atrio.impostaStanzaAdiacente("nord", biblioteca);
+        atrio.impostaStanzaAdiacente("est", aulaN11);
+        atrio.impostaStanzaAdiacente("sud", aulaN10);
+        atrio.impostaStanzaAdiacente("ovest", laboratorio);
+        
+        aulaN11.impostaStanzaAdiacente("ovest", atrio);
+        
+        aulaN10.impostaStanzaAdiacente("nord", atrio);
+        
+        laboratorio.impostaStanzaAdiacente("est", atrio);
+        // laboratorio ha un'uscita a ovest che abbiamo bloccato nel costruttore
+        laboratorio.impostaStanzaAdiacente("ovest", aulaN11); 
+        
+        biblioteca.impostaStanzaAdiacente("sud", atrio);
+
+        /* 3. PONE GLI ATTREZZI NELLE STANZE */
+        atrio.addAttrezzo(osso);
+        atrio.addAttrezzo(chiave); // Mettiamo la chiave nell'atrio per sbloccare il laboratorio
+        // Nota: non mettiamo la lanterna nell'aulaN10, così sarà buia finché non ce la porti!
+        atrio.addAttrezzo(lanterna); 
+
+        this.stanzaIniziale = atrio;
+        this.stanzaFinale = biblioteca;
+    }
+
+    // ... Getter e Setter rimangono uguali a prima ...
+    public Stanza getStanzaCorrente() { return stanzaCorrente; }
+    public void setStanzaCorrente(Stanza stanzaCorrente) { this.stanzaCorrente = stanzaCorrente; }
+    public Stanza getStanzaVincente() { return stanzaFinale; }
 }

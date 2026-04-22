@@ -2,21 +2,15 @@ package it.uniroma3.diadia;
 
 import java.util.Scanner;
 
-public class IOConsole {
-    // 1. Creiamo lo scanner come variabile di istanza
-    private Scanner scannerDiLinee;
-
-    public IOConsole() {
-        // 2. Lo inizializziamo una sola volta nel costruttore
-        this.scannerDiLinee = new Scanner(System.in);
+public class IOConsole implements IO {
+    @Override
+    public void mostraMessaggio(String messaggio) {
+        System.out.println(messaggio); // [cite: 116]
     }
 
-    public void mostraMessaggio(String msg) {
-        System.out.println(msg);
-    }
-
+    @Override
     public String leggiRiga() {
-        // 3. Usiamo lo scanner già esistente senza chiuderlo
-        return this.scannerDiLinee.nextLine();
+        Scanner scannerDiLinee = new Scanner(System.in); // [cite: 116]
+        return scannerDiLinee.nextLine();
     }
 }
