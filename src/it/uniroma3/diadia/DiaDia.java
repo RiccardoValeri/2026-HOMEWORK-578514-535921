@@ -1,15 +1,19 @@
 package it.uniroma3.diadia;
 
+import it.uniroma3.diadia.ambienti.Direzione;
+import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.comandi.Comando;
-import it.uniroma3.diadia.comandi.FabbricaDiComandiFisarmonica;
+import it.uniroma3.diadia.comandi.FabbricaDiComandiRiflessiva;
+import it.uniroma3.diadia.comandi.FabbricaDiComandi;
+import java.util.Scanner;
 
 public class DiaDia {
     private Partita partita;
-    private IO io; // Riferimento tipato IO 
+    private IO io;
 
-    public DiaDia(IO io) {
+    public DiaDia(IO io, Labirinto labirinto) {
         this.io = io;
-        this.partita = new Partita(io); // Passiamo IO anche alla partita se serve ai comandi
+        this.partita = new Partita(labirinto); 
     }
 
     public void gioca() {
@@ -22,7 +26,7 @@ public class DiaDia {
 
     private boolean processaIstruzione(String istruzione) {
         Comando comandoDaEseguire;
-        FabbricaDiComandiFisarmonica factory = new FabbricaDiComandiFisarmonica();
+        FabbricaDiComandi factory = new FabbricaDiComandiRiflessiva();
         comandoDaEseguire = factory.costruisciComando(istruzione);
         comandoDaEseguire.esegui(this.partita);
         
@@ -37,8 +41,18 @@ public class DiaDia {
     }
 
     public static void main(String[] argc) {
-        IO io = new IOConsole(); // L'unica istanza creata qui [cite: 44, 47]
-        DiaDia gioco = new DiaDia(io); // Iniettata nel costruttore [cite: 48, 119]
-        gioco.gioca();
+        try (Scanner scanner = new Scanner(System.in)) {
+            IO io = new IOConsole(scanner);
+            
+            Labirinto labirinto = Labirinto.newBuilder()
+                    .addStanzaIniziale("Atrio")
+                    .addAttrezzo("Atrio", "osso", 1)
+                    .addStanzaVincente("Biblioteca")
+                    .addAdiacenza("Atrio", "Biblioteca", Direzione.nord.name())
+                    .getLabirinto();
+            
+            DiaDia gioco = new DiaDia(io, labirinto);
+            gioco.gioca();
+        }
     }
 }

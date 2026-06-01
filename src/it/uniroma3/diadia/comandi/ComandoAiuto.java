@@ -1,31 +1,18 @@
 package it.uniroma3.diadia.comandi;
 
 import it.uniroma3.diadia.Partita;
-import it.uniroma3.diadia.IO;
 
-public class ComandoAiuto implements Comando {
-    private final static String[] elencoComandi = {"vai", "aiuto", "fine", "prendi", "posa", "guarda"};
-    private final static String NOME = "aiuto";
+// 1. Cambia implements con extends
+public class ComandoAiuto extends AbstractComando {
 
-    @Override
-    public void esegui(Partita partita) {
-        IO io = partita.getIo();
-        for(int i=0; i< elencoComandi.length; i++) 
-            io.mostraMessaggio(elencoComandi[i] + " ");
-    }
+	private static final String[] elencoComandi = {"vai", "aiuto", "fine", "prendi", "posa", "guarda"};
 
-    @Override
-    public void setParametro(String parametro) {
-        // Non serve parametro
-    }
-
-    @Override
-    public String getNome() {
-        return NOME;
-    }
-
-    @Override
-    public String getParametro() {
-        return null;
-    }
+	@Override
+	public void esegui(Partita partita) {
+		// 2. Usa this.getIo() che viene ereditato da AbstractComando
+		for (int i=0; i < elencoComandi.length; i++) {
+			this.getIo().mostraMessaggio(elencoComandi[i] + " ");
+		}
+	}
+    
 }

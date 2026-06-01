@@ -8,35 +8,36 @@ public class Partita {
 	private Labirinto labirinto;
 	private Giocatore giocatore;
 	private boolean finita;
-	private IO io; // Aggiungi questo campo [cite: 37]
 
-	// Il costruttore ora deve accettare IO 
-	public Partita(IO io){
-		this.labirinto = new Labirinto();
+	// Modifica il costruttore per accettare il Labirinto
+	public Partita(Labirinto labirinto){
+		this.labirinto = labirinto;
 		this.giocatore = new Giocatore();
 		this.finita = false;
-		this.io = io; 
-	}
-	
-	// Aggiungi questo metodo getter per i comandi
-	public IO getIo() {
-		return this.io;
 	}
 
 	public Labirinto getLabirinto() {
 		return labirinto;
 	}
 
+	public void setLabirinto(Labirinto labirinto) {
+		this.labirinto = labirinto;
+	}
+
 	public Giocatore getGiocatore() {
 		return giocatore;
 	}
+
+	public void setGiocatore(Giocatore giocatore) {
+		this.giocatore = giocatore;
+	}
 	
 	public boolean vinta() {
-		return this.labirinto.getStanzaCorrente() == this.labirinto.getStanzaVincente();
+		return this.getLabirinto().getStanzaCorrente() == this.getLabirinto().getStanzaVincente();
 	}
 
 	public boolean isFinita() {
-		return finita || vinta() || (giocatore.getCfu() == 0);
+		return finita || vinta() || (this.giocatore.getCfu() == 0);
 	}
 
 	public void setFinita() {
